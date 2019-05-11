@@ -24,7 +24,6 @@ import pl.com.bubka.foodrecipeswithcache.adapters.OnRecipeListener;
 import pl.com.bubka.foodrecipeswithcache.adapters.RecipeRecyclerAdapter;
 import pl.com.bubka.foodrecipeswithcache.models.Recipe;
 import pl.com.bubka.foodrecipeswithcache.util.Resource;
-import pl.com.bubka.foodrecipeswithcache.util.Testing;
 import pl.com.bubka.foodrecipeswithcache.util.VerticalSpacingItemDecorator;
 import pl.com.bubka.foodrecipeswithcache.viewmodels.RecipeListViewModel;
 
@@ -184,6 +183,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
         if(mRecipeListViewModel.getViewState().getValue() == RecipeListViewModel.ViewState.CATEGORIES){
             super.onBackPressed(); //zamykamy apke
         } else {
+            mRecipeListViewModel.cancelSearchRequest();
             mRecipeListViewModel.setViewCategories();
         }
     }
