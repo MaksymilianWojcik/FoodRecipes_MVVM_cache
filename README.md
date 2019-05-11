@@ -24,7 +24,11 @@ Slabe doswiadczenie dla uzytkownika, ale tutaj widzimy, ze retrofit-cache (wiado
 [Android documentation](https://developer.android.com/jetpack/docs/guide)
 
 Na tym opiera sie ten projekt.
-Szczegolnie zwrocmy uwage w dokumentacji na przykład i klasę ######Resource
+Szczegolnie zwrocmy uwage w dokumentacji na przykład i klase Resource
+
+### @NonNull lyb @Nullable
+Adnotacje sa tylko po to, zeby kompilarowi powiedziec co chcemy. To po prostu mowi kompilatorowi, zeby pokazal nam warninga. Nie jest to potrzebne
+
 
 
 
