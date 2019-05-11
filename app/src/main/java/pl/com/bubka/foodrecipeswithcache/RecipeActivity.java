@@ -45,7 +45,7 @@ public class RecipeActivity extends BaseActivity {
     private void getIncomingIntent(){
         if(getIntent().hasExtra("recipe")){
             Recipe recipe = getIntent().getParcelableExtra("recipe");
-            Log.d(TAG, "getIncomingIntent: " + recipe.getTitle());
+            Log.i(TAG, "getIncomingIntent: " + recipe.getTitle());
 
         }
     }

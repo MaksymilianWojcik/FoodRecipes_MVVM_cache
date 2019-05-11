@@ -47,7 +47,7 @@ public class RecipeRepository {
                     int index = 0;
                     for(long rowid : recipeDao.insertRecipes((Recipe[]) (item.getRecipes().toArray(recipes)))){
                         if(rowid == -1){ //mamy konflikt
-                            Log.d(TAG, "saveCallResult: CONFLICT... Recipe already in cache");
+                            Log.i(TAG, "saveCallResult: CONFLICT... Recipe already in cache");
                             // jak przepis juz istenieje... Nie hcemy ustawiac ingredient czy timestampa bo zostana wymazane
                             recipeDao.updateRecipe(
                                     recipes[index].getRecipe_id(),

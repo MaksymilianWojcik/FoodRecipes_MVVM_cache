@@ -113,7 +113,7 @@ public class HorizontalDottedProgress extends View {
                 if (mDotPosition == mDotAmount) {
                     mDotPosition = 0;
                 }
-                Log.d("INFOMETHOD","----On Animation Repeat----");
+                Log.i("INFOMETHOD","----On Animation Repeat----");
 
             }
         });

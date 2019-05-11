@@ -68,7 +68,7 @@ public abstract class NetworkBoundResource<CacheObject, RequestObject> {
      * @param dbSource
      */
     private void fetchFromNetwork(final LiveData<CacheObject> dbSource){
-        Log.d(TAG, "fetchFromNetwork: called");
+        Log.i(TAG, "fetchFromNetwork: called");
         //updatujemy LiveData na status LADOWANIE
         results.addSource(dbSource, new Observer<CacheObject>() {
             @Override
@@ -85,7 +85,7 @@ public abstract class NetworkBoundResource<CacheObject, RequestObject> {
                 results.removeSource(apiResponse); //usuwamy, bo zanim bedziemy to obserwowac, musimy obsluzyc 3 mozliwosci z api response
 
                 if(requestObjectApiResponse instanceof ApiResponse.ApiSuccessResponse){
-                    Log.d(TAG, "onChanged: ApiSuccessResponse");
+                    Log.i(TAG, "onChanged: ApiSuccessResponse");
 
                     appExecutors.diskIO().execute(new Runnable() {
                         @Override
@@ -107,7 +107,7 @@ public abstract class NetworkBoundResource<CacheObject, RequestObject> {
                         }
                     });
                 } else if (requestObjectApiResponse instanceof ApiResponse.ApiEmptyResponse){
-                    Log.d(TAG, "onChanged: ApiEmptyResponse");
+                    Log.i(TAG, "onChanged: ApiEmptyResponse");
                     appExecutors.mainThread().execute(new Runnable() {
                         @Override
                         public void run() {
@@ -120,7 +120,7 @@ public abstract class NetworkBoundResource<CacheObject, RequestObject> {
                         }
                     });
                 } else if (requestObjectApiResponse instanceof ApiResponse.ApiErrorResposne){
-                    Log.d(TAG, "onChanged: ApiErrorResponse");
+                    Log.i(TAG, "onChanged: ApiErrorResponse");
                     results.addSource(dbSource, new Observer<CacheObject>() {
                         @Override
                         public void onChanged(@Nullable CacheObject cacheObject) {
