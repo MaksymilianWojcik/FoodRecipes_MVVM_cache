@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.Toast;
 
 
 import java.util.List;
@@ -21,6 +22,8 @@ import pl.com.bubka.foodrecipeswithcache.util.Resource;
 import pl.com.bubka.foodrecipeswithcache.util.Testing;
 import pl.com.bubka.foodrecipeswithcache.util.VerticalSpacingItemDecorator;
 import pl.com.bubka.foodrecipeswithcache.viewmodels.RecipeListViewModel;
+
+import static pl.com.bubka.foodrecipeswithcache.viewmodels.RecipeListViewModel.QUERY_EXHAUSTED;
 
 
 public class RecipeListActivity extends BaseActivity implements OnRecipeListener {
@@ -56,7 +59,33 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
                 if(listResource != null){
                     Log.i(TAG, "onChanged: status: " + listResource.status);
                     if(listResource.data != null){
-                        mAdapter.setRecipes(listResource.data);
+                        switch(listResource.status){
+                            case LOADING:
+                                if(mRecipeListViewModel.getPageNumber() > 1){
+                                    mAdapter.displayLoading();
+                                } else {
+                                    mAdapter.displayOnlyLoading(); //szukamy pierwsza strone
+                                }
+                                break;
+                            case ERROR:
+                                Log.e(TAG, "onChanged: Cannot refresh the cache");
+                                Log.e(TAG, "onChanged: ERROR message: " + listResource.message);
+                                Log.e(TAG, "onChanged: status: ERROR, #recipes: " + listResource.data.size()); //ile z cacha przepisow
+                                mAdapter.hideLoading();
+                                mAdapter.setRecipes(listResource.data);
+                                Toast.makeText(RecipeListActivity.this, listResource.message, Toast.LENGTH_LONG).show();
+
+                                if(listResource.message.equals(QUERY_EXHAUSTED)){
+                                    mAdapter.setQueryExhausted();
+                                }
+                                break;
+                            case SUCCESS:
+                                Log.i(TAG, "onChanged: cache was refreshed");
+                                Log.i(TAG, "onChanged: status: SUCCESS, #Recipes: " + listResource.data.size());
+                                mAdapter.hideLoading();
+                                mAdapter.setRecipes(listResource.data);
+                                break;
+                        }
                     }
                 }
             }

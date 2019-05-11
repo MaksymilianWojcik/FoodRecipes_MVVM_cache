@@ -111,13 +111,49 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         else if(mRecipes.get(position).getTitle().equals("EXHAUSTED...")){
             return EXHAUSTED_TYPE;
         }
-        else if(position == mRecipes.size() - 1
-                && position != 0
-                && !mRecipes.get(position).getTitle().equals("EXHAUSTED...")){
-            return LOADING_TYPE;
-        }
         else{
             return RECIPE_TYPE;
+        }
+    }
+
+    //przy searchu
+    public void displayOnlyLoading(){
+        clearRecipesList();
+        Recipe recipe = new Recipe();
+        recipe.setTitle("LOADING...");
+        mRecipes.add(recipe);
+        notifyDataSetChanged();
+    }
+
+    public void displayLoading(){ //do wyswietlania przy paginatcji
+        if(mRecipes == null){
+            mRecipes = new ArrayList<>();
+        }
+        if(!isLoading()){
+            Recipe recipe = new Recipe();
+            recipe.setTitle("LOADING...");
+            mRecipes.add(recipe);
+            notifyDataSetChanged();
+        }
+    }
+
+    private void clearRecipesList(){
+        if(mRecipes == null){
+            mRecipes = new ArrayList<>();
+        } else {
+            mRecipes.clear();
+        }
+        notifyDataSetChanged();
+    }
+
+    public void hideLoading(){
+        if(isLoading()){
+            if(mRecipes.get(0).getTitle().equals("LOADING...")){
+                mRecipes.remove(0);
+            } else if(mRecipes.get(mRecipes.size()-1).equals("LOADING...")){ //wyseitlane na koncu listy
+                mRecipes.remove(mRecipes.size()-1);
+            }
+            notifyDataSetChanged();
         }
     }
 
@@ -129,27 +165,7 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         notifyDataSetChanged();
     }
 
-    private void hideLoading(){
-        if(isLoading()){
-            for(Recipe recipe: mRecipes){
-                if(recipe.getTitle().equals("LOADING...")){
-                    mRecipes.remove(recipe);
-                }
-            }
-            notifyDataSetChanged();
-        }
-    }
 
-    public void displayLoading(){
-        if(!isLoading()){
-            Recipe recipe = new Recipe();
-            recipe.setTitle("LOADING...");
-            List<Recipe> loadingList = new ArrayList<>();
-            loadingList.add(recipe);
-            mRecipes = loadingList;
-            notifyDataSetChanged();
-        }
-    }
 
     private boolean isLoading(){
         if(mRecipes != null){
