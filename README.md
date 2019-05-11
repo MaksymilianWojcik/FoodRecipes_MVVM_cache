@@ -20,7 +20,7 @@ Slabe doswiadczenie dla uzytkownika, ale tutaj widzimy, ze retrofit-cache (wiado
 2. Non-Relational (Firebase db)
 
 
-## Guid to app architecture (android documentation) + google sample
+## Guide to app architecture (android documentation) + google sample
 [Android documentation](https://developer.android.com/jetpack/docs/guide)
 
 Na tym opiera sie ten projekt.
@@ -33,6 +33,25 @@ Adnotacje sa tylko po to, zeby kompilarowi powiedziec co chcemy. To po prostu mo
 ### ApiResponse
 Czesc best-practices w google samples. Klasa ta ma czytac raw responses z retrofita i decydowac, jaki status im przypisac: request SUCCESFULL, EMPTY lub ERROR.
 
+### Single source of truth principle
+Zazwyczaj apka dostaje dane z 2 zrodel:
+- REST API
+- Local db
+
+w single source of truth principle chodzi o to, zeby dane pochodzily z jednego zrodla. Tzn. z databae cache. Ale zaraz, gdzie tu sens, przeciez bedziemy robic network requesty??
+No tak, ale spojrzmy na cala droge pobeirania danych:
+
+REST API -> Local DB cache -> APKA
+
+Tak wiec uzytkownik widzi tylko to co jest w cache, bo dane pobrane z resta przechodza przez cache. Nowe dane sa insertowane do cache.
+Wiec mamy single srouce of truth, ale w rzeczywiscoti w glebi mamy dane z 2 zrodel.
+
+Dzieki temu w Androidzie mamy szybkie dzialanie apki. Np. jak nie mamy neta, to wtedy mamy tez dane z cacha. Oprocz tego mamy clean code, latwy do testowania.
+Dobrze tez sie to wpasowuje do MVVM.
+
+
+### NetworkBoundResource
+Decyduje skad pobrac dane, co `robic z danymi itp.. To abstrakcyjna klasa, wiec bedziemy ja rozszerzac.
 
 # Skrotowe notatki:
 
