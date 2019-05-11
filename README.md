@@ -26,10 +26,12 @@ Slabe doswiadczenie dla uzytkownika, ale tutaj widzimy, ze retrofit-cache (wiado
 Na tym opiera sie ten projekt.
 Szczegolnie zwrocmy uwage w dokumentacji na przykład i klase Resource
 
-### @NonNull lyb @Nullable
+### Resources
+#### @NonNull lyb @Nullable
 Adnotacje sa tylko po to, zeby kompilarowi powiedziec co chcemy. To po prostu mowi kompilatorowi, zeby pokazal nam warninga. Nie jest to potrzebne
 
-
+### ApiResponse
+Czesc best-practices w google samples. Klasa ta ma czytac raw responses z retrofita i decydowac, jaki status im przypisac: request SUCCESFULL, EMPTY lub ERROR.
 
 
 # Skrotowe notatki:
