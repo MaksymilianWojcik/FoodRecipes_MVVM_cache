@@ -1,5 +1,8 @@
 package pl.com.bubka.foodrecipeswithcache.requests;
 
+import android.arch.lifecycle.LiveData;
+
+import pl.com.bubka.foodrecipeswithcache.requests.responses.ApiResponse;
 import pl.com.bubka.foodrecipeswithcache.requests.responses.RecipeResponse;
 import pl.com.bubka.foodrecipeswithcache.requests.responses.RecipeSearchResponse;
 
@@ -11,7 +14,7 @@ public interface RecipeApi {
 
     // SEARCH
     @GET("api/search")
-    Call<RecipeSearchResponse> searchRecipe(
+    LiveData<ApiResponse<RecipeSearchResponse>> searchRecipe(
             @Query("key") String key,
             @Query("q") String query,
             @Query("page") String page
@@ -19,7 +22,7 @@ public interface RecipeApi {
 
     // GET RECIPE REQUEST
     @GET("api/get")
-    Call<RecipeResponse> getRecipe(
+    LiveData<ApiResponse<RecipeResponse>> getRecipe(
             @Query("key") String key,
             @Query("rId") String recipe_id
     );

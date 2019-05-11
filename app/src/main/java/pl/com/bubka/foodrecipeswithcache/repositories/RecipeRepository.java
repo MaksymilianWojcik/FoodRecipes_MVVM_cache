@@ -11,8 +11,10 @@ import pl.com.bubka.foodrecipeswithcache.AppExecutors;
 import pl.com.bubka.foodrecipeswithcache.models.Recipe;
 import pl.com.bubka.foodrecipeswithcache.persistence.RecipeDao;
 import pl.com.bubka.foodrecipeswithcache.persistence.RecipeDatabase;
+import pl.com.bubka.foodrecipeswithcache.requests.ServiceGenerator;
 import pl.com.bubka.foodrecipeswithcache.requests.responses.ApiResponse;
 import pl.com.bubka.foodrecipeswithcache.requests.responses.RecipeSearchResponse;
+import pl.com.bubka.foodrecipeswithcache.util.Constants;
 import pl.com.bubka.foodrecipeswithcache.util.NetworkBoundResource;
 import pl.com.bubka.foodrecipeswithcache.util.Resource;
 
@@ -58,7 +60,7 @@ public class RecipeRepository {
                 //tutaj bedzie skomplikowane troszke.
                 //creteCalls zwraca obiekt LiveData, metoda ta tworzy retrofit call obiekt, a raczej LiveData retrofit call obiekt.
                 //Dltego bedziemy musiel izorbic RetrofitConveter do skonwertowania Call na LiveData
-                return null;
+                return ServiceGenerator.getRecipeApi().searchRecipe(Constants.API_KEY, query, String.valueOf(pageNumber));
             }
         }.getAsLiveData();
     }
