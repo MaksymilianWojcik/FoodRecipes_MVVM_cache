@@ -13,6 +13,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.util.List;
 
 import pl.com.bubka.foodrecipeswithcache.adapters.OnRecipeListener;
@@ -108,6 +112,14 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
         });
     }
 
+    private RequestManager initGlide(){
+        RequestOptions options = new RequestOptions()
+                .placeholder(R.drawable.white_background)
+                .error(R.drawable.white_background);
+        return Glide.with(this)
+                .setDefaultRequestOptions(options);
+    }
+
     private void searchRecipesApi(String query){
         mRecipeListViewModel.searchRecipesApi(query, 1);
     }
@@ -118,7 +130,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 
 
     private void initRecyclerView(){
-        mAdapter = new RecipeRecyclerAdapter(this);
+        mAdapter = new RecipeRecyclerAdapter(this, initGlide());
         VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(30);
         mRecyclerView.addItemDecoration(itemDecorator);
         mRecyclerView.setAdapter(mAdapter);
