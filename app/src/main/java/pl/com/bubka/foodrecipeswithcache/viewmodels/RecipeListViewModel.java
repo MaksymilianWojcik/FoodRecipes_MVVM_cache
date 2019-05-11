@@ -9,6 +9,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ import pl.com.bubka.foodrecipeswithcache.util.Resource;
 public class RecipeListViewModel extends AndroidViewModel {
 
     private static final String TAG = "RecipeListViewModel";
-
+    public static final String QUERY_EXHAUSTED = "No more results";
 
     public enum ViewState {CATEGORIES, RECIPES}; //should be repaced with static final int later
 
@@ -27,6 +28,12 @@ public class RecipeListViewModel extends AndroidViewModel {
     private MediatorLiveData<Resource<List<Recipe>>> recipes = new MediatorLiveData<>();
 
     private RecipeRepository recipeRepository;
+
+    private boolean isQueryExhausted;
+    private boolean isPerformingQuery;
+    private int pageNumber;
+    private String query;
+
 
 
     public RecipeListViewModel(@NonNull Application application) {
@@ -51,14 +58,53 @@ public class RecipeListViewModel extends AndroidViewModel {
         return recipes;
     }
 
+    public int getPageNumber(){
+        return pageNumber;
+    }
+
     public void searchRecipesApi(String query, int pageNumber){
+        if(!isPerformingQuery){
+            if(pageNumber == 0){
+                pageNumber = 1;
+            }
+            this.pageNumber = pageNumber;
+            this.query = query;
+            isQueryExhausted = false;
+            executeSearch();
+        }
+    }
+
+    private void executeSearch(){
+        isPerformingQuery = true;
+        viewState.setValue(ViewState.RECIPES);
         final LiveData<Resource<List<Recipe>>> repositorySource = recipeRepository.searchRecipesApi(query, pageNumber);
         recipes.addSource(repositorySource, new Observer<Resource<List<Recipe>>>() {
             @Override
             public void onChanged(@Nullable Resource<List<Recipe>> listResource) {
-
-                //mozemy tutaj robic co checmy, modyfikowac itp. bo to w koncu medaitor live data
-                recipes.setValue(listResource);
+                if(listResource != null){
+                    recipes.setValue(listResource);
+                    if(listResource.status == Resource.Status.SUCCESS){
+                        isPerformingQuery = false;
+                        if(listResource.data != null){
+                            if(listResource.data.size() == 0){
+                                Log.i(TAG, "onChanged: query is exhauted...");
+                                recipes.setValue(
+                                        new Resource<List<Recipe>>(
+                                                Resource.Status.ERROR,
+                                                listResource.data,
+                                                QUERY_EXHAUSTED
+                                        )
+                                );
+                            }
+                        }
+                        recipes.removeSource(repositorySource);
+                    } else if(listResource.status == Resource.Status.ERROR){
+                        isPerformingQuery = false;
+                        recipes.removeSource(repositorySource);
+                    }
+                } else {
+                    recipes.removeSource(repositorySource); //zawsze musimy pamietac zey usunac srouce bo ebdziemy miec duplikaty
+                }
             }
         });
     }
