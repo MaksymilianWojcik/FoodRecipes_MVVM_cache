@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.List;
 
@@ -17,6 +18,8 @@ import pl.com.bubka.foodrecipeswithcache.requests.responses.RecipeSearchResponse
 import pl.com.bubka.foodrecipeswithcache.util.Constants;
 import pl.com.bubka.foodrecipeswithcache.util.NetworkBoundResource;
 import pl.com.bubka.foodrecipeswithcache.util.Resource;
+
+import static android.support.constraint.Constraints.TAG;
 
 public class RecipeRepository {
 
@@ -39,6 +42,24 @@ public class RecipeRepository {
             @Override
             protected void saveCallResult(@NonNull RecipeSearchResponse item) {
                 //tu zapiszemy dane z retorfita do cachea
+                if(item.getRecipes() != null){ //recipe list == null jak np. api key jest expired
+                    Recipe[] recipes = new Recipe[item.getRecipes().size()];
+                    int index = 0;
+                    for(long rowid : recipeDao.insertRecipes((Recipe[]) (item.getRecipes().toArray(recipes)))){
+                        if(rowid == -1){ //mamy konflikt
+                            Log.d(TAG, "saveCallResult: CONFLICT... Recipe already in cache");
+                            // jak przepis juz istenieje... Nie hcemy ustawiac ingredient czy timestampa bo zostana wymazane
+                            recipeDao.updateRecipe(
+                                    recipes[index].getRecipe_id(),
+                                    recipes[index].getTitle(),
+                                    recipes[index].getPublisher(),
+                                    recipes[index].getImage_url(),
+                                    recipes[index].getSocial_rank()
+                            );
+                        }
+                        index++;
+                    }
+                }
             }
 
             @Override
