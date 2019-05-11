@@ -51,7 +51,25 @@ Dobrze tez sie to wpasowuje do MVVM.
 
 
 ### NetworkBoundResource
-Decyduje skad pobrac dane, co `robic z danymi itp.. To abstrakcyjna klasa, wiec bedziemy ja rozszerzac.
+Decyduje skad pobrac dane, co `robic z danymi itp.. To abstrakcyjna klasa, wiec mozemy ja tylko rozszerzac.
+
+
+####MediatorLiveData
+Jest to subklasa LiveDaty. Dzieki niej mozemy obserwowac inne obiekty LiveData i reagowac na ich onChanged eventy.
+Klasa ta prawidlowo propaguje jej active/inactive stany w dol do zrodla obiektu LiveData
+
+Np. mamy 2 instancje LiveData, livedata1 i livedata2, i chcemy zmergowac ich emisje w jeden obiekt, kotrym wlasnie bedzie mediatorLiveData.
+W tym wypadku livedata1 i livedata2 zostana zrodlem (source) dla MediatorLiveData i za kazdym razem kiedy onChanged callback bedzie wywolany dla
+ktorejkolwiek z nich, to ustawiamy nowa wartosc w mediatorlivedata.
+
+z dokumentacji:
+"If the given LiveData is already added as a source but with a different Observer, IllegalArgumentException will be thrown."
+
+### Room
+
+#### Converters
+Room nie moze np. przechowywac tablicy (Recipe.class przechowuje tak skladniki). Dlatego musimy te tablice skonwertowac na taki typ,
+jaki room moze przechowywac.
 
 # Skrotowe notatki:
 
