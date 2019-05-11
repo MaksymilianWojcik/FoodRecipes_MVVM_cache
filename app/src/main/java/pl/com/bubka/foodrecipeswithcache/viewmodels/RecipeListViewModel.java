@@ -33,8 +33,7 @@ public class RecipeListViewModel extends AndroidViewModel {
     private boolean isPerformingQuery;
     private int pageNumber;
     private String query;
-
-
+    private boolean cancelRequest;
 
     public RecipeListViewModel(@NonNull Application application) {
         super(application);
@@ -86,40 +85,53 @@ public class RecipeListViewModel extends AndroidViewModel {
     }
 
     private void executeSearch(){
+        cancelRequest = false;
         isPerformingQuery = true;
         viewState.setValue(ViewState.RECIPES);
         final LiveData<Resource<List<Recipe>>> repositorySource = recipeRepository.searchRecipesApi(query, pageNumber);
         recipes.addSource(repositorySource, new Observer<Resource<List<Recipe>>>() {
             @Override
             public void onChanged(@Nullable Resource<List<Recipe>> listResource) {
-                if(listResource != null){
-                    recipes.setValue(listResource);
-                    if(listResource.status == Resource.Status.SUCCESS){
-                        isPerformingQuery = false;
-                        if(listResource.data != null){
-                            if(listResource.data.size() == 0){
-                                Log.i(TAG, "onChanged: query is exhauted...");
-                                recipes.setValue(
-                                        new Resource<List<Recipe>>(
-                                                Resource.Status.ERROR,
-                                                listResource.data,
-                                                QUERY_EXHAUSTED
-                                        )
-                                );
+                if(!cancelRequest){
+                    if(listResource != null){
+                        recipes.setValue(listResource);
+                        if(listResource.status == Resource.Status.SUCCESS){
+                            isPerformingQuery = false;
+                            if(listResource.data != null){
+                                if(listResource.data.size() == 0){
+                                    Log.i(TAG, "onChanged: query is exhauted...");
+                                    recipes.setValue(
+                                            new Resource<List<Recipe>>(
+                                                    Resource.Status.ERROR,
+                                                    listResource.data,
+                                                    QUERY_EXHAUSTED
+                                            )
+                                    );
+                                }
                             }
+                            recipes.removeSource(repositorySource);
+                        } else if(listResource.status == Resource.Status.ERROR){
+                            isPerformingQuery = false;
+                            recipes.removeSource(repositorySource);
                         }
-                        recipes.removeSource(repositorySource);
-                    } else if(listResource.status == Resource.Status.ERROR){
-                        isPerformingQuery = false;
-                        recipes.removeSource(repositorySource);
+                    } else {
+                        recipes.removeSource(repositorySource); //zawsze musimy pamietac zey usunac srouce bo ebdziemy miec duplikaty
                     }
                 } else {
-                    recipes.removeSource(repositorySource); //zawsze musimy pamietac zey usunac srouce bo ebdziemy miec duplikaty
+                    recipes.removeSource(repositorySource);
                 }
             }
         });
     }
 
+    public void cancelSearchRequest(){
+        if(isPerformingQuery){
+            Log.i(TAG, "cancelSearchRequest: Canceling search request");
+            cancelRequest = true;
+            isPerformingQuery = false;
+            pageNumber = 1;
+        }
+    }
 
 }
 
