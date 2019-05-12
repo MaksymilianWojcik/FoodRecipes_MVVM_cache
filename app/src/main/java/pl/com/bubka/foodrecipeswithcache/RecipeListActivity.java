@@ -145,7 +145,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
                 mAdapter,
                 viewPreloadSizeProvider,
                 30); //30 chcemy cachowac
-        mRecyclerView.addOnScrollListener(recyclerViewPreloader); 
+        mRecyclerView.addOnScrollListener(recyclerViewPreloader);
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
