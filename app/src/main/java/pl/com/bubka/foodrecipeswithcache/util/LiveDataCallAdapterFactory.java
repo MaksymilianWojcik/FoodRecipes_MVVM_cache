@@ -15,7 +15,7 @@ public class LiveDataCallAdapterFactory extends CallAdapter.Factory {
     /**
      * Ta metoda wykonuje jakas lizbe sprawdzen i zwraca Response type dla requesta rerofita
      * (@bodyType to ResponseType. Moze byc RecipeResponse lub RecipeSearchResponse)
-     *
+     * <p>
      * CHECK #1) returnType zwraca LiveData
      * CHECK #2) Type LiveData<T> jest type ApiResponse.class
      * CHECK #3) Upewnij sie ze ApiResponse jest parametryzowany. AKA ApiResponse<T> istnieje
@@ -25,7 +25,7 @@ public class LiveDataCallAdapterFactory extends CallAdapter.Factory {
 
         // Check#1 upewnic sie ze CallAdapter zwraca LiveDate
 
-        if(CallAdapter.Factory.getRawType(returnType) != LiveData.class){
+        if (CallAdapter.Factory.getRawType(returnType) != LiveData.class) {
             return null;
         }
 
@@ -34,13 +34,13 @@ public class LiveDataCallAdapterFactory extends CallAdapter.Factory {
 
         // Check czy to Type apiResponse
         Type rawObservableType = CallAdapter.Factory.getRawType(observableType);
-        if(rawObservableType != ApiResponse.class){
+        if (rawObservableType != ApiResponse.class) {
             throw new IllegalArgumentException("Type must be a defined resource");
         }
 
         // Check #3 sprawdzamy czy ApiResponse jest parametrized, czyli czy ApiResponse<T> istnieje? (musi byc T)
         // T to albo RecipeResponse albo T bedzie RecipeSearchResponse
-        if(!(observableType instanceof ParameterizedType)){
+        if (!(observableType instanceof ParameterizedType)) {
             throw new IllegalArgumentException("Resource must be parametrized");
         }
 

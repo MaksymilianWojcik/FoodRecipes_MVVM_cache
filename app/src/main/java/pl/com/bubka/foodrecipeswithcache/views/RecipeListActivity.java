@@ -1,4 +1,4 @@
-package pl.com.bubka.foodrecipeswithcache;
+package pl.com.bubka.foodrecipeswithcache.views;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -13,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
@@ -22,6 +21,8 @@ import com.bumptech.glide.util.ViewPreloadSizeProvider;
 
 import java.util.List;
 
+import pl.com.bubka.foodrecipeswithcache.BaseActivity;
+import pl.com.bubka.foodrecipeswithcache.R;
 import pl.com.bubka.foodrecipeswithcache.adapters.OnRecipeListener;
 import pl.com.bubka.foodrecipeswithcache.adapters.RecipeRecyclerAdapter;
 import pl.com.bubka.foodrecipeswithcache.models.Recipe;
@@ -52,22 +53,22 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 
         initRecyclerView();
         initSearchView();
-        setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         subscribeObservers();
     }
 
 
-    private void subscribeObservers(){
+    private void subscribeObservers() {
 
         mRecipeListViewModel.getRecipes().observe(this, new Observer<Resource<List<Recipe>>>() {
             @Override
             public void onChanged(@Nullable Resource<List<Recipe>> listResource) {
-                if(listResource != null){
+                if (listResource != null) {
                     Log.i(TAG, "onChanged: status: " + listResource.status);
-                    if(listResource.data != null){
-                        switch(listResource.status){
+                    if (listResource.data != null) {
+                        switch (listResource.status) {
                             case LOADING:
-                                if(mRecipeListViewModel.getPageNumber() > 1){
+                                if (mRecipeListViewModel.getPageNumber() > 1) {
                                     mAdapter.displayLoading();
                                 } else {
                                     mAdapter.displayOnlyLoading(); //szukamy pierwsza strone
@@ -81,7 +82,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
                                 mAdapter.setRecipes(listResource.data);
                                 Toast.makeText(RecipeListActivity.this, listResource.message, Toast.LENGTH_LONG).show();
 
-                                if(listResource.message.equals(QUERY_EXHAUSTED)){
+                                if (listResource.message.equals(QUERY_EXHAUSTED)) {
                                     mAdapter.setQueryExhausted();
                                 }
                                 break;
@@ -100,8 +101,8 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
         mRecipeListViewModel.getViewState().observe(this, new Observer<RecipeListViewModel.ViewState>() {
             @Override
             public void onChanged(@Nullable RecipeListViewModel.ViewState viewState) {
-                if(viewState != null){
-                    switch(viewState){
+                if (viewState != null) {
+                    switch (viewState) {
                         case RECIPES:
                             //recipes beda automatycznie pokazywane z innego observera
                             break;
@@ -114,7 +115,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
         });
     }
 
-    private RequestManager initGlide(){
+    private RequestManager initGlide() {
         RequestOptions options = new RequestOptions()
                 .placeholder(R.drawable.white_background)
                 .error(R.drawable.white_background);
@@ -122,7 +123,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
                 .setDefaultRequestOptions(options);
     }
 
-    private void searchRecipesApi(String query){
+    private void searchRecipesApi(String query) {
         mRecyclerView.smoothScrollToPosition(0);
         mRecipeListViewModel.searchRecipesApi(query, 1);
         mSearchView.clearFocus();
@@ -133,7 +134,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
     }
 
 
-    private void initRecyclerView(){
+    private void initRecyclerView() {
         ViewPreloadSizeProvider<String> viewPreloadSizeProvider = new ViewPreloadSizeProvider<>();
         mAdapter = new RecipeRecyclerAdapter(this, initGlide(), viewPreloadSizeProvider);
         VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(30);
@@ -151,7 +152,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if(!mRecyclerView.canScrollVertically(1) && mRecipeListViewModel.getViewState().getValue() == RecipeListViewModel.ViewState.RECIPES){
+                if (!mRecyclerView.canScrollVertically(1) && mRecipeListViewModel.getViewState().getValue() == RecipeListViewModel.ViewState.RECIPES) {
                     mRecipeListViewModel.searchNextPage();
                 }
             }
@@ -160,7 +161,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    private void initSearchView(){
+    private void initSearchView() {
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -190,7 +191,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 
     @Override
     public void onBackPressed() {
-        if(mRecipeListViewModel.getViewState().getValue() == RecipeListViewModel.ViewState.CATEGORIES){
+        if (mRecipeListViewModel.getViewState().getValue() == RecipeListViewModel.ViewState.CATEGORIES) {
             super.onBackPressed(); //zamykamy apke
         } else {
             mRecipeListViewModel.cancelSearchRequest();

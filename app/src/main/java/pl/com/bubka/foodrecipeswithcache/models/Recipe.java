@@ -11,7 +11,7 @@ import android.support.annotation.NonNull;
 import java.util.Arrays;
 
 @Entity(tableName = "recipes")
-public class Recipe implements Parcelable{
+public class Recipe implements Parcelable {
 
     @PrimaryKey
     @NonNull

@@ -4,7 +4,6 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import pl.com.bubka.foodrecipeswithcache.util.Constants;
-
 import pl.com.bubka.foodrecipeswithcache.util.LiveDataCallAdapterFactory;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -34,7 +33,7 @@ public class ServiceGenerator {
 
     private static RecipeApi recipeApi = retrofit.create(RecipeApi.class);
 
-    public static RecipeApi getRecipeApi(){
+    public static RecipeApi getRecipeApi() {
         return recipeApi;
     }
 }

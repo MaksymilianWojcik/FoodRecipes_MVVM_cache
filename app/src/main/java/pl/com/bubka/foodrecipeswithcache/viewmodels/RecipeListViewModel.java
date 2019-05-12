@@ -22,7 +22,9 @@ public class RecipeListViewModel extends AndroidViewModel {
     private static final String TAG = "RecipeListViewModel";
     public static final String QUERY_EXHAUSTED = "No more results";
 
-    public enum ViewState {CATEGORIES, RECIPES}; //should be repaced with static final int later
+    public enum ViewState {CATEGORIES, RECIPES}
+
+    ; //should be repaced with static final int later
 
     private MutableLiveData<ViewState> viewState;
     private MediatorLiveData<Resource<List<Recipe>>> recipes = new MediatorLiveData<>();
@@ -44,31 +46,31 @@ public class RecipeListViewModel extends AndroidViewModel {
     }
 
     private void init() {
-        if(viewState == null){ //nie zostal jeszcze zainicjowany (np. kied peirwszy raz jest stworzony view model
+        if (viewState == null) { //nie zostal jeszcze zainicjowany (np. kied peirwszy raz jest stworzony view model
             viewState = new MutableLiveData<>();
             viewState.setValue(ViewState.CATEGORIES); //chcemy za pierwszym razem widziec kategorie
         }
     }
 
-    public LiveData<ViewState> getViewState(){
+    public LiveData<ViewState> getViewState() {
         return viewState;
     }
 
-    public LiveData<Resource<List<Recipe>>> getRecipes(){
+    public LiveData<Resource<List<Recipe>>> getRecipes() {
         return recipes;
     }
 
-    public int getPageNumber(){
+    public int getPageNumber() {
         return pageNumber;
     }
 
-    public void setViewCategories(){
+    public void setViewCategories() {
         viewState.setValue(ViewState.CATEGORIES);
     }
 
-    public void searchRecipesApi(String query, int pageNumber){
-        if(!isPerformingQuery){
-            if(pageNumber == 0){
+    public void searchRecipesApi(String query, int pageNumber) {
+        if (!isPerformingQuery) {
+            if (pageNumber == 0) {
                 pageNumber = 1;
             }
             this.pageNumber = pageNumber;
@@ -78,14 +80,14 @@ public class RecipeListViewModel extends AndroidViewModel {
         }
     }
 
-    public void searchNextPage(){
-        if(!isQueryExhausted && !isPerformingQuery){
+    public void searchNextPage() {
+        if (!isQueryExhausted && !isPerformingQuery) {
             pageNumber++;
             executeSearch();
         }
     }
 
-    private void executeSearch(){
+    private void executeSearch() {
         requestStartTime = System.currentTimeMillis();
         cancelRequest = false;
         isPerformingQuery = true;
@@ -94,14 +96,14 @@ public class RecipeListViewModel extends AndroidViewModel {
         recipes.addSource(repositorySource, new Observer<Resource<List<Recipe>>>() {
             @Override
             public void onChanged(@Nullable Resource<List<Recipe>> listResource) {
-                if(!cancelRequest){
-                    if(listResource != null){
+                if (!cancelRequest) {
+                    if (listResource != null) {
                         recipes.setValue(listResource);
-                        if(listResource.status == Resource.Status.SUCCESS){
+                        if (listResource.status == Resource.Status.SUCCESS) {
                             Log.i(TAG, "onChanged: REQUEST TIME " + (System.currentTimeMillis() - requestStartTime) / 1000 + " seconds");
                             isPerformingQuery = false;
-                            if(listResource.data != null){
-                                if(listResource.data.size() == 0){
+                            if (listResource.data != null) {
+                                if (listResource.data.size() == 0) {
                                     Log.i(TAG, "onChanged: query is exhauted...");
                                     recipes.setValue(
                                             new Resource<List<Recipe>>(
@@ -113,7 +115,7 @@ public class RecipeListViewModel extends AndroidViewModel {
                                 }
                             }
                             recipes.removeSource(repositorySource);
-                        } else if(listResource.status == Resource.Status.ERROR){
+                        } else if (listResource.status == Resource.Status.ERROR) {
                             Log.i(TAG, "onChanged: REQUEST TIME " + (System.currentTimeMillis() - requestStartTime) / 1000 + " seconds");
                             isPerformingQuery = false;
                             recipes.removeSource(repositorySource);
@@ -128,8 +130,8 @@ public class RecipeListViewModel extends AndroidViewModel {
         });
     }
 
-    public void cancelSearchRequest(){
-        if(isPerformingQuery){
+    public void cancelSearchRequest() {
+        if (isPerformingQuery) {
             Log.i(TAG, "cancelSearchRequest: Canceling search request");
             cancelRequest = true;
             isPerformingQuery = false;

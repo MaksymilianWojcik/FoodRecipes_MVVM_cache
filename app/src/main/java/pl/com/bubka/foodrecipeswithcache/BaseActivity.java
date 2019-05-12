@@ -21,7 +21,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.setContentView(constraintLayout);
     }
 
-    public void showProgressBar(boolean visibility){
+    public void showProgressBar(boolean visibility) {
         mProgressBar.setVisibility(visibility ? View.VISIBLE : View.INVISIBLE);
     }
 }

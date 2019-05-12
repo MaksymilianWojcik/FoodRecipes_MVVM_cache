@@ -20,10 +20,9 @@ public class RecipeViewModel extends AndroidViewModel {
         recipeRepository = RecipeRepository.getInstance(application);
     }
 
-    public LiveData<Resource<Recipe>> searchRecipeApi(String recipeId){
-        return recipeRepository.searchRecipesApi(recipeId); //TODO rename for searchRecipe
+    public LiveData<Resource<Recipe>> searchRecipeApi(String recipeId) {
+        return recipeRepository.searchRecipeApi(recipeId);
     }
-
 
 
 }

@@ -1,11 +1,11 @@
 package pl.com.bubka.foodrecipeswithcache.requests.responses;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import pl.com.bubka.foodrecipeswithcache.models.Recipe;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import pl.com.bubka.foodrecipeswithcache.models.Recipe;
 
 public class RecipeResponse {
 
@@ -22,7 +22,7 @@ public class RecipeResponse {
     }
 
     @Nullable
-    public Recipe getRecipe(){
+    public Recipe getRecipe() {
         return recipe;
     }
 

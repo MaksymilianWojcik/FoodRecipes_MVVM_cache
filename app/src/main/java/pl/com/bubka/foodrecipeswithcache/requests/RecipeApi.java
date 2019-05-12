@@ -5,8 +5,6 @@ import android.arch.lifecycle.LiveData;
 import pl.com.bubka.foodrecipeswithcache.requests.responses.ApiResponse;
 import pl.com.bubka.foodrecipeswithcache.requests.responses.RecipeResponse;
 import pl.com.bubka.foodrecipeswithcache.requests.responses.RecipeSearchResponse;
-
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 

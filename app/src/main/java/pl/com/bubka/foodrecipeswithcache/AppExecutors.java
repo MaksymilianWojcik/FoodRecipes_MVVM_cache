@@ -6,14 +6,13 @@ import android.os.Looper;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 public class AppExecutors {
 
     private static AppExecutors instance;
 
-    public static AppExecutors getInstance(){
-        if(instance == null){
+    public static AppExecutors getInstance() {
+        if (instance == null) {
             instance = new AppExecutors();
         }
         return instance;
@@ -22,11 +21,11 @@ public class AppExecutors {
     private final Executor mDiskIO = Executors.newSingleThreadExecutor();
     private final Executor mMainThreadExecutor = new MainThreadExecutor();
 
-    public Executor diskIO(){
+    public Executor diskIO() {
         return mDiskIO;
     }
 
-    public Executor mainThread(){
+    public Executor mainThread() {
         return mMainThreadExecutor;
     }
 

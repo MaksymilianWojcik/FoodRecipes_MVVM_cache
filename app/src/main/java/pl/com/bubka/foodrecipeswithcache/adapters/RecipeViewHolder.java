@@ -6,10 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.ListPreloader;
 import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.util.ViewPreloadSizeProvider;
 
 import pl.com.bubka.foodrecipeswithcache.R;
@@ -38,7 +35,7 @@ public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.On
         itemView.setOnClickListener(this);
     }
 
-    public void onBind(Recipe recipe){
+    public void onBind(Recipe recipe) {
         requestManager
                 .load(recipe.getImage_url())
                 .into(image);

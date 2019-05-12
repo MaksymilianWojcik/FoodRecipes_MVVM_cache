@@ -27,8 +27,8 @@ public class RecipeRepository {
     private static RecipeRepository instance;
     private RecipeDao recipeDao;
 
-    public static RecipeRepository getInstance(Context context){
-        if(instance == null){
+    public static RecipeRepository getInstance(Context context) {
+        if (instance == null) {
             instance = new RecipeRepository(context);
         }
         return instance;
@@ -38,16 +38,16 @@ public class RecipeRepository {
         recipeDao = RecipeDatabase.getInstance(context).getRecipeDao();
     }
 
-    public LiveData<Resource<List<Recipe>>> searchRecipesApi(final String query, final int pageNumber){
-        return new NetworkBoundResource<List<Recipe>, RecipeSearchResponse>(AppExecutors.getInstance()){
+    public LiveData<Resource<List<Recipe>>> searchRecipesApi(final String query, final int pageNumber) {
+        return new NetworkBoundResource<List<Recipe>, RecipeSearchResponse>(AppExecutors.getInstance()) {
             @Override
             protected void saveCallResult(@NonNull RecipeSearchResponse item) {
                 //tu zapiszemy dane z retorfita do cachea
-                if(item.getRecipes() != null){ //recipe list == null jak np. api key jest expired
+                if (item.getRecipes() != null) { //recipe list == null jak np. api key jest expired
                     Recipe[] recipes = new Recipe[item.getRecipes().size()];
                     int index = 0;
-                    for(long rowid : recipeDao.insertRecipes((Recipe[]) (item.getRecipes().toArray(recipes)))){
-                        if(rowid == -1){ //mamy konflikt
+                    for (long rowid : recipeDao.insertRecipes((Recipe[]) (item.getRecipes().toArray(recipes)))) {
+                        if (rowid == -1) { //mamy konflikt
                             Log.i(TAG, "saveCallResult: CONFLICT... Recipe already in cache");
                             // jak przepis juz istenieje... Nie hcemy ustawiac ingredient czy timestampa bo zostana wymazane
                             recipeDao.updateRecipe(
@@ -87,11 +87,11 @@ public class RecipeRepository {
         }.getAsLiveData();
     }
 
-    public LiveData<Resource<Recipe>> searchRecipesApi(final String recipeId){
-        return new NetworkBoundResource<Recipe, RecipeResponse>(AppExecutors.getInstance()){
+    public LiveData<Resource<Recipe>> searchRecipeApi(final String recipeId) {
+        return new NetworkBoundResource<Recipe, RecipeResponse>(AppExecutors.getInstance()) {
             @Override
             protected void saveCallResult(@NonNull RecipeResponse item) {
-                if(item.getRecipe() != null){ //null jak apikey bedzie expired
+                if (item.getRecipe() != null) { //null jak apikey bedzie expired
                     item.getRecipe().setTimestamp((int) (System.currentTimeMillis() / 1000));
                     recipeDao.insertRecipe(item.getRecipe());
                 }
@@ -105,7 +105,7 @@ public class RecipeRepository {
                 int lastRefresh = data.getTimestamp();
                 Log.i(TAG, "shouldFetch: last refresh: " + lastRefresh);
                 Log.i(TAG, "shouldFetch: its been " + ((currentTime - lastRefresh) / 60 / 60 / 24) + " days since recipe was cached");
-                if((currentTime - data.getTimestamp()) >= Constants.RECIPE_REFRESH_TIME){
+                if ((currentTime - data.getTimestamp()) >= Constants.RECIPE_REFRESH_TIME) {
                     Log.i(TAG, "shouldFetch: recipe should be redownloaded");
                     return true;
                 }

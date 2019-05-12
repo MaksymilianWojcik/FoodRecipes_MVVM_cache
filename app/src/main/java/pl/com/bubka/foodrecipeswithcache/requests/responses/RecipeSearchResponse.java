@@ -1,13 +1,13 @@
 package pl.com.bubka.foodrecipeswithcache.requests.responses;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import pl.com.bubka.foodrecipeswithcache.models.Recipe;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+
+import pl.com.bubka.foodrecipeswithcache.models.Recipe;
 
 public class RecipeSearchResponse {
 
