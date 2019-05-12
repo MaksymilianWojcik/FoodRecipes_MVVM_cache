@@ -77,3 +77,13 @@ jaki room moze przechowywac.
 - ViewModel za nas obsluguje lifecycle, tzn. nie musimy sami obslugiwac zapisania stanu activiyt przy przejsciu w onPause itp.
 - MutableLiveData -> ale getLiveData
 
+
+#Retrofit
+
+Retrofit to wrapper na OkHTTP i to jest wlasnei odpoweidzialne za robienie requestow.
+Dzieki temu mozemy stworzyc swojego clienta okhttp i ustawic go na retrofita, ustawic timeouty wedlug potrzeb itp.
+
+## Ciekawosta
+W android studi mozemy na emulatorze ustawic predkosc internetu jaka chcemy, ustawiamy to w ustawieniach emulatora -> show advanced settings -> 
+i tam np. na bardzo wolne to na GPRS
+
