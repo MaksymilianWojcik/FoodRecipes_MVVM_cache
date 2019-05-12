@@ -98,3 +98,6 @@ Oczywiscie musimy lekko przescrollowac, zeby obrazki sie zkachowaly, w koncu dod
 W android studi mozemy na emulatorze ustawic predkosc internetu jaka chcemy, ustawiamy to w ustawieniach emulatora -> show advanced settings -> 
 i tam np. na bardzo wolne to na GPRS
 
+## skroty
+- command + option + l - format
+- control + option + o - usuniecie nieuzywanych importow
