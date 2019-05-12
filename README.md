@@ -91,6 +91,8 @@ I tu uzyjemy tzw. glide-preloadera
 ##Glide preloader
 [RecyclerView Glide](http://bumptech.github.io/glide/int/recyclerview.html)
 
+Oczywiscie musimy lekko przescrollowac, zeby obrazki sie zkachowaly, w koncu dodalismy to w addOnScroll listenerze
+
 
 ## Ciekawosta
 W android studi mozemy na emulatorze ustawic predkosc internetu jaka chcemy, ustawiamy to w ustawieniach emulatora -> show advanced settings -> 
