@@ -83,6 +83,15 @@ jaki room moze przechowywac.
 Retrofit to wrapper na OkHTTP i to jest wlasnei odpoweidzialne za robienie requestow.
 Dzieki temu mozemy stworzyc swojego clienta okhttp i ustawic go na retrofita, ustawic timeouty wedlug potrzeb itp.
 
+#Glide - cache
+
+Kiedy np. zrobimy requesta, mamy liste i nagle wylaczymy neta, to lista przepisow bedzie zaladowana, ale bez zdjec. To dlatego, ze glide
+domyslnie tych obrazkow nie cachuje, tylko cachuje pare obrazkow pozatym co uzytkownik widzi w recyclerview.
+I tu uzyjemy tzw. glide-preloadera
+##Glide preloader
+[RecyclerView Glide](http://bumptech.github.io/glide/int/recyclerview.html)
+
+
 ## Ciekawosta
 W android studi mozemy na emulatorze ustawic predkosc internetu jaka chcemy, ustawiamy to w ustawieniach emulatora -> show advanced settings -> 
 i tam np. na bardzo wolne to na GPRS
