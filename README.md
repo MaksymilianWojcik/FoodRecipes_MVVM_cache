@@ -54,7 +54,7 @@ Dobrze tez sie to wpasowuje do MVVM.
 Decyduje skad pobrac dane, co `robic z danymi itp.. To abstrakcyjna klasa, wiec mozemy ja tylko rozszerzac.
 
 
-####MediatorLiveData
+#### MediatorLiveData
 Jest to subklasa LiveDaty. Dzieki niej mozemy obserwowac inne obiekty LiveData i reagowac na ich onChanged eventy.
 Klasa ta prawidlowo propaguje jej active/inactive stany w dol do zrodla obiektu LiveData
 
@@ -78,12 +78,12 @@ jaki room moze przechowywac.
 - MutableLiveData -> ale getLiveData
 
 
-#Retrofit
+# Retrofit
 
 Retrofit to wrapper na OkHTTP i to jest wlasnei odpoweidzialne za robienie requestow.
 Dzieki temu mozemy stworzyc swojego clienta okhttp i ustawic go na retrofita, ustawic timeouty wedlug potrzeb itp.
 
-#Glide - cache
+# Glide - cache
 
 Kiedy np. zrobimy requesta, mamy liste i nagle wylaczymy neta, to lista przepisow bedzie zaladowana, ale bez zdjec. To dlatego, ze glide
 domyslnie tych obrazkow nie cachuje, tylko cachuje pare obrazkow pozatym co uzytkownik widzi w recyclerview.
