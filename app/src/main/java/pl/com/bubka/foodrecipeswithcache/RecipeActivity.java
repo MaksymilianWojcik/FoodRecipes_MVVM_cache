@@ -1,5 +1,6 @@
 package pl.com.bubka.foodrecipeswithcache;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 
 import pl.com.bubka.foodrecipeswithcache.models.Recipe;
+import pl.com.bubka.foodrecipeswithcache.util.Resource;
 import pl.com.bubka.foodrecipeswithcache.viewmodels.RecipeViewModel;
 
 public class RecipeActivity extends BaseActivity {
@@ -46,8 +48,37 @@ public class RecipeActivity extends BaseActivity {
         if(getIntent().hasExtra("recipe")){
             Recipe recipe = getIntent().getParcelableExtra("recipe");
             Log.i(TAG, "getIncomingIntent: " + recipe.getTitle());
-
+            subscribeObservers(recipe.getRecipe_id());
         }
+    }
+
+    private void subscribeObservers(final String recipeId){
+        mRecipeViewModel.searchRecipeApi(recipeId).observe(this, new Observer<Resource<Recipe>>() {
+            @Override
+            public void onChanged(@Nullable Resource<Recipe> recipeResource) {
+                if(recipeResource != null){
+                    if(recipeResource.data != null){ //cialo responsa w koncu
+                        switch (recipeResource.status){
+                            case LOADING:
+                                showProgressBar(true);
+                                break;
+                            case ERROR:
+                                Log.e(TAG, "onChanged: status: ERROR, recipe from cache: " + recipeResource.data.getTitle());
+                                Log.e(TAG, "onChanged: ERROR message: " + recipeResource.message);
+                                showParent();
+                                showProgressBar(false);
+                                break;
+                            case SUCCESS:
+                                Log.i(TAG, "onChanged: cache has been refereshed");
+                                Log.i(TAG, "onChanged: status: SUCCESS, recipe: " + recipeResource.data.getTitle());
+                                showParent();
+                                showProgressBar(false);
+                                break;
+                        }
+                    }
+                }
+            }
+        });
     }
 
 

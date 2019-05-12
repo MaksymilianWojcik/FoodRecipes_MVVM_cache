@@ -14,6 +14,7 @@ import pl.com.bubka.foodrecipeswithcache.persistence.RecipeDao;
 import pl.com.bubka.foodrecipeswithcache.persistence.RecipeDatabase;
 import pl.com.bubka.foodrecipeswithcache.requests.ServiceGenerator;
 import pl.com.bubka.foodrecipeswithcache.requests.responses.ApiResponse;
+import pl.com.bubka.foodrecipeswithcache.requests.responses.RecipeResponse;
 import pl.com.bubka.foodrecipeswithcache.requests.responses.RecipeSearchResponse;
 import pl.com.bubka.foodrecipeswithcache.util.Constants;
 import pl.com.bubka.foodrecipeswithcache.util.NetworkBoundResource;
@@ -82,6 +83,49 @@ public class RecipeRepository {
                 //creteCalls zwraca obiekt LiveData, metoda ta tworzy retrofit call obiekt, a raczej LiveData retrofit call obiekt.
                 //Dltego bedziemy musiel izorbic RetrofitConveter do skonwertowania Call na LiveData
                 return ServiceGenerator.getRecipeApi().searchRecipe(Constants.API_KEY, query, String.valueOf(pageNumber));
+            }
+        }.getAsLiveData();
+    }
+
+    public LiveData<Resource<Recipe>> searchRecipesApi(final String recipeId){
+        return new NetworkBoundResource<Recipe, RecipeResponse>(AppExecutors.getInstance()){
+            @Override
+            protected void saveCallResult(@NonNull RecipeResponse item) {
+                if(item.getRecipe() != null){ //null jak apikey bedzie expired
+                    item.getRecipe().setTimestamp((int) (System.currentTimeMillis() / 1000));
+                    recipeDao.insertRecipe(item.getRecipe());
+                }
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable Recipe data) {
+                Log.i(TAG, "shouldFetch: recipe: " + data.toString());
+                int currentTime = (int) (System.currentTimeMillis() / 1000);
+                Log.i(TAG, "shouldFetch: current time: " + currentTime);
+                int lastRefresh = data.getTimestamp();
+                Log.i(TAG, "shouldFetch: last refresh: " + lastRefresh);
+                Log.i(TAG, "shouldFetch: its been " + ((currentTime - lastRefresh) / 60 / 60 / 24) + " days since recipe was cached");
+                if((currentTime - data.getTimestamp()) >= Constants.RECIPE_REFRESH_TIME){
+                    Log.i(TAG, "shouldFetch: recipe should be redownloaded");
+                    return true;
+                }
+                Log.i(TAG, "shouldFetch: Recipe doesnt need to be downloaded again");
+                return false;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<Recipe> loadFromDb() {
+                return recipeDao.getRecipe(recipeId);
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<RecipeResponse>> createCall() {
+                return ServiceGenerator.getRecipeApi().getRecipe(
+                        Constants.API_KEY,
+                        recipeId
+                );
             }
         }.getAsLiveData();
     }
